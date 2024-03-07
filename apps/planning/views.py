@@ -1,8 +1,10 @@
 import calendar
 import datetime
 
+from django.db import transaction, IntegrityError
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+from rest_framework.status import HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
 
 from apps.planning.models import RentHours, Schedule, Tenantry
@@ -39,12 +41,22 @@ class HoursView(APIView):
 
 		return Response(hours)
 
+	# @transaction.atomic
 	def post(self, request, year=None, month=None, day=None):
 		list_hours = request.data.get('hours')
-		Tenantry.objects.create(name=request.data.get('name'), phone=request.data.get('phone'))
+		for try_hour in list_hours:
+			if try_hour not in self.get(request, year, month, day).data:
+				return Response(status=HTTP_400_BAD_REQUEST)
+		try:
+			tenantry = Tenantry.objects.get(name=request.data.get('name'), phone=request.data.get('phone'))
+		except Tenantry.DoesNotExist:
+			tenantry = Tenantry.objects.create(name=request.data.get('name'), phone=request.data.get('phone'))
+		rent_hours = []
 		for hour in list_hours:
-			RentHours.objects.create(
+			rent_hours.append(RentHours.objects.create(
 				day=datetime.date(year, month, day),
 				time=datetime.time(hour=hour, minute=0, second=0),
-			)
+			))
+		schedule = Schedule.objects.create(tenantry=tenantry)
+		schedule.schedule_hours.set(rent_hours)
 		return Response()
