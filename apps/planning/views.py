@@ -1,7 +1,7 @@
 import calendar
 import datetime
 
-from django.db import transaction, IntegrityError
+from django.db import transaction
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.status import HTTP_400_BAD_REQUEST
@@ -43,6 +43,8 @@ class HoursView(APIView):
 
 	@transaction.atomic
 	def post(self, request, year=None, month=None, day=None):
+		if request.data.get('hours') or not request.data.get('name') or not request.data.get('phone'):
+			return Response(status=HTTP_400_BAD_REQUEST)
 		list_hours = request.data.get('hours')
 		for try_hour in list_hours:
 			if try_hour not in self.get(request, year, month, day).data:
