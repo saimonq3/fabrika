@@ -41,7 +41,7 @@ class HoursView(APIView):
 
 		return Response(hours)
 
-	# @transaction.atomic
+	@transaction.atomic
 	def post(self, request, year=None, month=None, day=None):
 		list_hours = request.data.get('hours')
 		for try_hour in list_hours:
