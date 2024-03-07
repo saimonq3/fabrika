@@ -1,0 +1,17 @@
+.vscode/
+*.pyc
+*.pyo
+*.sqlite3
+__pycache__/
+.idea/
+media/
+.env
+*.log
+*.log.*
+deploy.sh
+static
+statica
+*.zip
+.DS_Store
+celerybeat-schedule
+
