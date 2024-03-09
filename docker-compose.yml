@@ -17,7 +17,7 @@ services:
       - limon
   celery:
     build: .
-    command: celery -A limon worker -l debug -P threads --concurrency=1
+    command: celery -A limon worker -l info
     depends_on:
       - app
     networks:
