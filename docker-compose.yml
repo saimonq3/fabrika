@@ -17,7 +17,8 @@ services:
       - limon
   celery:
     build: .
-    command: celery -A limon worker -l info
+    command: >
+      sh -c "pipenv install && pipenv install --system && celery -A limon worker -l info"
     depends_on:
       - app
     networks:
