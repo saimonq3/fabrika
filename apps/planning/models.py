@@ -3,7 +3,7 @@ from django.db import models
 
 class Tenantry(models.Model):
 	name = models.CharField(max_length=128, verbose_name='Имя')
-	phone = models.CharField(max_length=11, verbose_name='Телефон')
+	phone = models.CharField(max_length=16, verbose_name='Телефон')
 
 	def __str__(self):
 		return f'{self.name}'

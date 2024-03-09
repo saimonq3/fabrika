@@ -8,6 +8,7 @@ from rest_framework.status import HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
 
 from apps.planning.models import RentHours, Schedule, Tenantry
+from apps.planning.tasks import telegram_notify
 from limon import settings
 
 
@@ -59,4 +60,18 @@ class HoursView(APIView):
 			))
 		schedule = Schedule.objects.create(tenantry=tenantry)
 		schedule.schedule_hours.set(rent_hours)
+
+		pre_hours = [f'{i.day.strftime("%d.%m.%y")} => {i.time.hour}:00 - {i.time.hour + 1}:00' for i in schedule.schedule_hours.all()]  # noqa: E501
+		hours = '\n'
+		for hour in pre_hours:
+			hours += hour + '\n'
+
+		telegram_notify.delay(
+			{
+				'name': schedule.tenantry.name,
+				'phone': schedule.tenantry.phone,
+				'hours': hours
+
+			}
+		)
 		return Response()
