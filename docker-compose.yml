@@ -13,6 +13,23 @@ services:
       - /var/www/admin-static:/app/statica
       - ${PWD}/.env:/app/.env:ro
       - ${PWD}/apps:/app/apps
+    networks:
+      - limon
+  celery:
+    build: .
+    command: celery -A limon worker -l debug -P threads --concurrency=1
+    depends_on:
+      - app
+    networks:
+      - limon
+    volumes:
+      - ${PWD}/.env:/app/.env:ro
+      - ${PWD}/apps/:/app/apps/:ro
+      - ${PWD}/files:/app/files
+      - ${PWD}:/app:ro
+networks:
+  limon:
+    external: true
 
 volumes:
   app-volume:
