@@ -105,20 +105,14 @@ STATIC_ROOT = 'statica/'
 STATICFILES_DIRS = ['staticfiles/']
 
 CSRF_TRUSTED_ORIGINS = [
-	'https://tolq3.ru',
-	'https://tolq3.ru',
-	'http://localhost',
-	'http://localhost:8080',
+	'https://fabrikainta.ru'
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
-	'http://tolq3.ru',
-	'https://tolq3.ru',
-	'http://localhost',
-	'http://localhost:8080',
+	'https://fabrikainta.ru'
 ]
 CORS_ALLOW_METHODS = ['GET', 'POST', 'PUT']
 CORS_ALLOW_HEADERS = [
