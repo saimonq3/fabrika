@@ -130,7 +130,8 @@ CORS_ALLOW_HEADERS = [
 	'x-requested-with',
 	'token',
 	'headers',
-	'Access-Control-Allow-Origin'
+	'Access-Control-Allow-Origin',
+	'strict-origin-when-cross-origin'
 ]
 
 MEDIA_ROOT = BASE_DIR / 'media'
