@@ -3,7 +3,7 @@ from django.db import models
 
 class Tenantry(models.Model):
 	name = models.CharField(max_length=128, verbose_name='Имя')
-	phone = models.CharField(max_length=11, verbose_name='Телефон', unique=True)
+	phone = models.CharField(max_length=11, verbose_name='Телефон')
 
 	def __str__(self):
 		return f'{self.name}'
@@ -11,6 +11,7 @@ class Tenantry(models.Model):
 	class Meta:
 		verbose_name = 'Арендатор'
 		verbose_name_plural = 'Арендаторы'
+		unique_together = ['name', 'phone']
 
 
 class RentHours(models.Model):

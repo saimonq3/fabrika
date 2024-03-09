@@ -33,7 +33,7 @@ class HoursView(APIView):
 
 	def get(self, request, year=None, month=None, day=None):
 		rent_hours = RentHours.objects.filter(day__month=month, day__year=year, day__day=day)
-		hours = settings.HOURS_WORK
+		hours = [i for i in range(int(settings.TIME_START), int(settings.TIME_STOP) + 1)]
 
 		for hour in rent_hours:
 			if hour.time.hour in hours:
@@ -43,8 +43,6 @@ class HoursView(APIView):
 
 	@transaction.atomic
 	def post(self, request, year=None, month=None, day=None):
-		if request.data.get('hours') or not request.data.get('name') or not request.data.get('phone'):
-			return Response(status=HTTP_400_BAD_REQUEST)
 		list_hours = request.data.get('hours')
 		for try_hour in list_hours:
 			if try_hour not in self.get(request, year, month, day).data:
