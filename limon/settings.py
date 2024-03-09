@@ -105,14 +105,16 @@ STATIC_ROOT = 'statica/'
 STATICFILES_DIRS = ['staticfiles/']
 
 CSRF_TRUSTED_ORIGINS = [
-	'https://fabrikainta.ru'
+	'https://fabrikainta.ru',
+	'http://192.168.1.209:8800'
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
-	'https://fabrikainta.ru'
+	'https://fabrikainta.ru',
+	'http://192.168.1.209:8800'
 ]
 CORS_ALLOW_METHODS = ['GET', 'POST', 'PUT']
 CORS_ALLOW_HEADERS = [
