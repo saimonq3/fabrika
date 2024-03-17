@@ -1,6 +1,8 @@
 import calendar
 import datetime
+import json
 
+import requests
 from django.db import transaction
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -8,7 +10,7 @@ from rest_framework.status import HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
 
 from apps.planning.models import RentHours, Schedule, Tenantry
-from apps.planning.tasks import telegram_notify
+from apps.planning.tasks import telegram_notify, ntfy_notify
 from limon import settings
 
 
@@ -66,12 +68,45 @@ class HoursView(APIView):
 		for hour in pre_hours:
 			hours += hour + '\n'
 
-		telegram_notify.delay(
-			{
+		data = {
 				'name': schedule.tenantry.name,
 				'phone': schedule.tenantry.phone,
 				'hours': hours
 
 			}
-		)
+		telegram_notify(data)
+		ntfy_notify(data)
 		return Response()
+
+
+class UserSchedule(APIView):
+	permission_classes = [AllowAny, ]
+
+	def get(self, request):
+		schedules = Schedule.objects.filter(tenantry__phone__icontains=request.query_params.get('phone').strip(' '))
+		if not schedules:
+			return Response([])
+		hours = {}
+		for schedule in schedules:
+			days = []
+			for day in schedule.schedule_hours.all():
+				hours[day.day.strftime("%d.%m.%y")] = days
+				hours[day.day.strftime("%d.%m.%y")].append(day.time.hour)
+
+		return Response(hours)
+
+	def delete(self, request):
+		phone = request.query_params.get('phone')
+		date = datetime.datetime.strptime(request.query_params.get('date'), "%d.%m.%y").date()
+
+		schedules = Schedule.objects.filter(tenantry__phone=phone, schedule_hours__day=date)
+		if not schedules:
+			return Response()
+
+		for schedule in schedules:
+			schedule.schedule_hours.all().delete()
+			schedule.delete()
+
+		return Response()
+
+
