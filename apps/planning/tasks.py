@@ -15,7 +15,7 @@ def get_headers():
 
 def get_text(data):
 	return (
-		f"""Клиент {data['name']} оставил заявку на часы {data['hours']}Номер телефона клиента: {data['phone']}"""
+		f"""Клиент {data['name']} оставил заявку на сумму {data['cost']} на часы {data['hours']}Номер телефона клиента: {data['phone']}"""
 	)
 
 

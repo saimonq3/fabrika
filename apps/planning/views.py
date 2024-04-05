@@ -71,8 +71,8 @@ class HoursView(APIView):
 		data = {
 				'name': schedule.tenantry.name,
 				'phone': schedule.tenantry.phone,
-				'hours': hours
-
+				'hours': hours,
+				'cost': len(pre_hours) * 1500
 			}
 		telegram_notify(data)
 		ntfy_notify(data)
